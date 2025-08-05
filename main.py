@@ -22,7 +22,7 @@ def main():
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable,)
-    Shot.containers = (updatable, drawable)
+    Shot.containers = (shots, updatable, drawable)
 
     x = SCREEN_WIDTH / 2  # Set starting position in middle of screen
     y = SCREEN_HEIGHT / 2
@@ -39,10 +39,16 @@ def main():
 
         for object in updatable:
             object.update(dt)
-        for object in asteroids:
-            if object.collision(player):
+        for asteroid in asteroids:
+            if asteroid.collision(player):
                 print("Game over!")
                 sys.exit()
+        for asteroid in asteroids:
+            for shot in shots:
+                if shot.collision(asteroid):
+                    asteroid.kill()
+                    shot.kill()
+
         for object in drawable:
             object.draw(screen)
         pygame.display.flip()
